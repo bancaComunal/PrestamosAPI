@@ -1,0 +1,27 @@
+# Define la imagen base
+FROM python:3.9-slim-buster
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Copia el archivo de requerimientos
+COPY requirements.txt .
+
+# Instala las dependencias del proyecto
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia todo el contenido de la aplicación en el contenedor
+COPY . .
+
+# Configura variables de entorno
+ENV PYTHONUNBUFFERED=1
+
+# Realiza migraciones de base de datos
+RUN python manage.py migrate
+
+# Expone el puerto en el que la aplicación escucha
+EXPOSE 8000
+
+# Define el comando que se ejecutará al iniciar el contenedor
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
